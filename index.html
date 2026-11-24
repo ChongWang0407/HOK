@@ -2441,6 +2441,10 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
 
 </style><style>
 /* Static demo surfaces */
+.agent-model-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.agent-model-row{padding:12px 13px;border:1.5px solid var(--border);border-radius:12px;background:rgba(255,255,255,.58);box-shadow:2px 3px 0 rgba(36,36,44,.08)}
+.agent-model-role{display:block;margin-bottom:5px;color:var(--text2);font-size:11px;font-weight:800}
+.agent-model-name{display:block;color:var(--text);font-size:15px;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
 .demo-button.btn{background:#cf4b43;color:#fff;border-color:#aa3c37;box-shadow:0 3px 0 #aa3c3740;white-space:nowrap;flex:none;font-weight:800;padding:11px 18px}.demo-button.btn:hover{background:#b83e38}.demo-button.btn:disabled{opacity:.65;cursor:wait}
 .main-header,.vc-header{flex-wrap:wrap;gap:10px}.vc-header{justify-content:flex-start}.main-header .tabs{flex:0 1 auto}.main-header-actions{margin-left:auto}.vc-header .vc-tabs{flex:0 1 auto;min-width:0}.vc-tabs{flex-wrap:wrap}
 .demo-api-label{display:inline-block;font-size:11px;line-height:1.5;color:#6f4639;background:#f4ddcb;border:1px solid #bd9f90;padding:3px 6px;border-radius:7px;margin-left:5px;vertical-align:middle}.api-config h3{flex-wrap:wrap}.api-config input:disabled,.api-config select:disabled{opacity:.75;cursor:default}
@@ -2740,53 +2744,17 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
         </div>
       </div>
 
-      <!-- API Config: kept at the end so parameter cards stay visible. -->
-      <div class="api-config">
+      <div class="api-config agent-models">
         <div class="api-config-header open" id="apiConfigHeader">
-          <button class="section-toggle" id="apiConfigToggle" type="button" aria-label="收起 API 配置" aria-expanded="true" aria-controls="apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
-          <h3>🔌 API 配置 <span class="badge badge-required">必填</span>
-            <span class="tooltip-wrap">
-              <button class="motion-hint" id="apiConfigHelpBtn" type="button" aria-label="查看 API 配置说明" aria-describedby="apiConfigTip" aria-controls="apiConfigDialog" aria-expanded="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M12 19h.01"></path></svg>
-              </button>
-              <span class="tooltip" id="apiConfigTip" role="tooltip">点击查看配置方式</span>
-            </span>
-          </h3>
+          <button class="section-toggle" id="apiConfigToggle" type="button" aria-label="收起 Agent 模型" aria-expanded="true" aria-controls="apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
+          <h3>🤖 Agent 调用模型</h3>
         </div>
         <div class="api-config-body show" id="apiConfigBody">
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="apiToken">Knot Token <span style="color:var(--red);">*</span></label>
-            <input type="password" class="input-field" id="apiToken" autocomplete="off" placeholder="粘贴 Knot Token">
-          </div>
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="apiUser">企微英文名 (x-knot-api-user)</label>
-            <input type="text" class="input-field" id="apiUser" placeholder="你的企微英文名">
-          </div>
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="apiModel">模型</label>
-            <select class="input-field" id="apiModel" style="cursor:pointer;" onchange="updateModelRouteHint()">
-              <option value="deepseek-v3.1" selected>deepseek-v3.1（内部）</option>
-              <option value="deepseek-v4-flash">deepseek-v4-flash（内部）</option>
-              <option value="glm-5.2">glm-5.2（内部）</option>
-              <option value="claude-4.6-sonnet">claude-4.6-sonnet（外部-支持思考）</option>
-              <option value="claude-opus-5">claude-opus-5（外部-支持思考）</option>
-              <option value="gpt-5.5">gpt-5.5（外部）</option>
-              <option value="kimi-k2.7-code">kimi-k2.7-code（内部）</option>
-            </select>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <input type="checkbox" id="apiStream" checked style="accent-color:var(--accent);">
-            <label for="apiStream" style="font-size:13px;color:var(--text2);cursor:pointer;">流式输出（SSE）</label>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <input type="checkbox" id="apiThinking" style="accent-color:var(--accent);">
-            <label for="apiThinking" style="font-size:13px;color:var(--text2);cursor:pointer;">开启思考模式 (enable_thinking)</label>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);">
-            <span class="api-status unknown" id="apiStatusDot"></span>
-            <span id="apiStatusText">未验证</span>
-            <button type="button" class="btn btn-sm btn-secondary" id="checkLocalBackendBtn" style="margin-left:auto;padding:4px 8px;font-size:11px;">检测连接状态</button>
-          </div>
+          <ul class="agent-model-list" aria-label="Agent 调用模型">
+            <li class="agent-model-row"><span class="agent-model-role">主 Agent</span><strong class="agent-model-name">DeepSeek-V4-Pro</strong></li>
+            <li class="agent-model-row"><span class="agent-model-role">检索归档子Agent</span><strong class="agent-model-name">DeepSeek-V4-flash</strong></li>
+            <li class="agent-model-row"><span class="agent-model-role">审核子 Agent</span><strong class="agent-model-name">Hy3</strong></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -3018,19 +2986,6 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
     <div class="entity-dialog-actions"><button type="button" class="btn btn-secondary" id="moveConversationCancel">取消</button><button type="submit" class="btn btn-primary">保存移动</button></div>
   </form>
 </dialog>
-<dialog class="generation-mode-dialog tool-intro-dialog api-help-dialog" id="apiConfigDialog" aria-labelledby="apiConfigDialogTitle">
-  <div class="generation-mode-dialog-panel">
-    <div class="generation-mode-dialog-header">
-      <h2 id="apiConfigDialogTitle">API 配置说明</h2>
-      <button class="generation-mode-dialog-close" id="apiConfigDialogClose" type="button" aria-label="关闭 API 配置说明">×</button>
-    </div>
-    <div class="tool-intro-dialog-content">
-      <div class="api-help-line">配置个人 Knot API：先双击“启动批量文案.command”，通过本机服务打开本页；粘贴个人 Knot Token，并填写自己的企微英文名</div>
-      <div class="api-help-line">刷新保留 Token、对话和正在进行的请求；关闭本页后清空，重新打开需填写 Token。已成功归档的文案保留在腾讯文档。</div>
-      <div class="api-help-line">跳转：<a href="https://knot.woa.com/settings/token" target="_blank" rel="noopener noreferrer">个人 Kont 页面</a></div>
-    </div>
-  </div>
-</dialog>
 <dialog class="generation-mode-dialog" id="generationModeDialog" aria-labelledby="generationModeDialogTitle">
   <div class="generation-mode-dialog-panel">
     <div class="generation-mode-dialog-header">
@@ -3134,52 +3089,17 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
           <label class="vc-field" id="vc-cta-custom-wrap" hidden>自定义行动号召<input class="input-field" id="vc-customCta" data-vc-field="customCta" maxlength="300" placeholder="输入希望读者采取的行动"></label>
       </section>
       <details class="vc-card vc-advanced" id="vc-advanced"><summary class="section-label"><span class="vc-fold-triangle" aria-hidden="true"></span>备注<span class="badge">选填</span></summary><div class="vc-details-body"><label class="vc-field">补充说明<textarea class="input-field" id="vc-activity" data-vc-field="activity" rows="4" maxlength="6000" placeholder="活动补充信息、必须包含或避免的表达"></textarea></label></div></details>
-      <div class="api-config vc-api" id="vc-api">
+      <div class="api-config vc-api agent-models" id="vc-api">
         <div class="api-config-header open" id="vc-apiConfigHeader">
-          <button class="section-toggle" id="vc-apiConfigToggle" type="button" aria-label="收起 API 配置" aria-expanded="true" aria-controls="vc-apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
-          <h3>🔌 API 配置 <span class="badge badge-required">必填</span>
-            <span class="tooltip-wrap">
-              <button class="motion-hint" id="vc-apiConfigHelpBtn" type="button" aria-label="查看 API 配置说明" aria-describedby="vc-apiConfigTip" aria-controls="vc-apiConfigDialog" aria-expanded="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M12 19h.01"></path></svg>
-              </button>
-              <span class="tooltip" id="vc-apiConfigTip" role="tooltip">点击查看配置方式</span>
-            </span>
-          </h3>
+          <button class="section-toggle" id="vc-apiConfigToggle" type="button" aria-label="收起 Agent 模型" aria-expanded="true" aria-controls="vc-apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
+          <h3>🤖 Agent 调用模型</h3>
         </div>
         <div class="api-config-body show" id="vc-apiConfigBody">
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="vc-token">Knot Token <span style="color:var(--red);">*</span></label>
-            <input type="password" class="input-field" id="vc-token" autocomplete="off" placeholder="粘贴 Knot Token">
-          </div>
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="vc-apiUser">企微英文名 (x-knot-api-user)</label>
-            <input type="text" class="input-field" id="vc-apiUser" placeholder="你的企微英文名" value="chongwang">
-          </div>
-          <div style="margin-bottom:8px;">
-            <label class="input-label" for="vc-apiModel">模型</label>
-            <select class="input-field" id="vc-apiModel" style="cursor:pointer;">
-              <option value="deepseek-v3.1" selected>deepseek-v3.1（内部）</option>
-              <option value="deepseek-v4-flash">deepseek-v4-flash（内部）</option>
-              <option value="glm-5.2">glm-5.2（内部）</option>
-              <option value="claude-4.6-sonnet">claude-4.6-sonnet（外部-支持思考）</option>
-              <option value="claude-opus-5">claude-opus-5（外部-支持思考）</option>
-              <option value="gpt-5.5">gpt-5.5（外部）</option>
-              <option value="kimi-k2.7-code">kimi-k2.7-code（内部）</option>
-            </select>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <input type="checkbox" id="vc-apiStream" checked style="accent-color:var(--accent);">
-            <label for="vc-apiStream" style="font-size:13px;color:var(--text2);cursor:pointer;">流式输出（SSE）</label>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <input type="checkbox" id="vc-apiThinking" style="accent-color:var(--accent);">
-            <label for="vc-apiThinking" style="font-size:13px;color:var(--text2);cursor:pointer;">开启思考模式 (enable_thinking)</label>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);">
-            <span class="api-status unknown" id="vc-apiStatusDot"></span>
-            <span id="vc-apiStatusText">未验证</span>
-            <button type="button" class="btn btn-sm btn-secondary" id="vc-check-api" style="margin-left:auto;padding:4px 8px;font-size:11px;">检测连接状态</button>
-          </div>
+          <ul class="agent-model-list" aria-label="Agent 调用模型">
+            <li class="agent-model-row"><span class="agent-model-role">主 Agent</span><strong class="agent-model-name">DeepSeek-V4-Pro</strong></li>
+            <li class="agent-model-row"><span class="agent-model-role">检索归档子Agent</span><strong class="agent-model-name">DeepSeek-V4-flash</strong></li>
+            <li class="agent-model-row"><span class="agent-model-role">审核子 Agent</span><strong class="agent-model-name">Hy3</strong></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -3267,18 +3187,6 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
   </form>
 </dialog>
 <dialog class="vc-dialog" id="vc-entity-dialog" aria-labelledby="vc-entity-title"><form id="vc-entity-form"><div class="vc-section-head"><h2 id="vc-entity-title">新建项目</h2><button class="vc-icon-button" id="vc-entity-close" type="button" aria-label="关闭">✕</button></div><label class="vc-field" id="vc-entity-name-wrap">名称<input class="input-field" id="vc-entity-name" maxlength="120" required></label><div id="vc-entity-project-fields"><label class="vc-field">活动周期<input class="input-field" id="vc-entity-period" maxlength="120" placeholder="例如：2026.10 — 2026.11"></label><label class="vc-field">项目说明<textarea class="input-field" id="vc-entity-description" rows="3" maxlength="3000"></textarea></label></div><label class="vc-field" id="vc-entity-parent-wrap" hidden>所属项目<select class="input-field" id="vc-entity-parent"></select></label><p id="vc-entity-warning" hidden>彻底删除后无法恢复。</p><div class="vc-dialog-actions"><button class="btn btn-secondary" id="vc-entity-cancel" type="button">取消</button><button class="btn btn-primary" id="vc-entity-save" type="submit">保存</button></div></form></dialog>
-<dialog class="generation-mode-dialog tool-intro-dialog api-help-dialog" id="vc-apiConfigDialog" aria-labelledby="vc-apiConfigDialogTitle">
-  <div class="generation-mode-dialog-panel">
-    <div class="generation-mode-dialog-header">
-      <h2 id="vc-apiConfigDialogTitle">API 配置说明</h2>
-      <button class="generation-mode-dialog-close" id="vc-apiConfigDialogClose" type="button" aria-label="关闭 API 配置说明">×</button>
-    </div>
-    <div class="tool-intro-dialog-content">
-      <div class="api-help-line">配置个人 Knot API：前往个人 Kont 页面复制 Token 粘贴至此处，并填写自己的企微英文名</div>
-      <div class="api-help-line">跳转：<a href="https://knot.woa.com/settings/token" target="_blank" rel="noopener noreferrer">个人 Kont 页面</a></div>
-    </div>
-  </div>
-</dialog>
 <div class="vc-toast" id="vc-toast" role="status" hidden></div>
 
 <script>
@@ -3387,27 +3295,12 @@ const HOKDemo = (() => {
     const fallback=()=>{const t=document.createElement('textarea');t.value=text;t.style.cssText='position:fixed;left:-9999px';document.body.append(t);t.select();const ok=document.execCommand('copy');t.remove();toast(ok?'已复制':'请选中文字复制');};
     if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>toast('已复制')).catch(fallback);else fallback();
   }
-  function api(prefix=''){
-    const id=s=>$(prefix+s);
-    const header=id('apiConfigHeader');header.querySelector('.badge')?.remove();
-    if(!header.querySelector('.demo-api-label')){const tag=document.createElement('span');tag.className='demo-api-label';tag.textContent='演示 demo，无需配置';header.querySelector('h3').append(tag);}
-    for(const suffix of ['apiToken','token','apiUser','apiModel','apiStream','apiThinking']){
-      const el=id(suffix);if(!el)continue;el.disabled=true;
-      if(suffix==='apiToken'||suffix==='token'){el.value='';el.placeholder='演示模式，无需 Token';el.closest('div')?.querySelector('label span')?.remove();}
-      if(suffix==='apiUser')el.value='ChongWang';
-      if(suffix==='apiModel')el.replaceChildren(new Option('本地演示 · 预设案例','demo'));
-    }
-    id('apiStatusText').textContent='演示模式已就绪';id('apiStatusDot').className='api-status ok';
-    const check=prefix?$('vc-check-api'):$('checkLocalBackendBtn');check.textContent='检查演示状态';check.onclick=()=>{id('apiStatusText').textContent='演示已就绪 · 无需网络连接';};
-    id('apiConfigTip').textContent='固定案例演示，不需要配置 API';
-    const dialog=id('apiConfigDialog');dialog.querySelectorAll('.api-help-line').forEach((line,i)=>{line.textContent=i===0?'这是纯前端演示。点击顶部“使用演示数据”，即可体验分析、生成及归档流程。':i===1?'结果使用预写案例。编辑和归档保存在当前标签页，刷新可恢复，关闭后不长期保留。':'';});
-  }
   function lock(container,locked){
     container.classList.toggle('demo-locked',locked);
     container.querySelectorAll('input,select,textarea,button:not(.motion-hint):not(.section-toggle)').forEach(el=>{if(el.closest('.api-config'))return;el.disabled=locked;});
     container.querySelectorAll('.chip').forEach(el=>{el.setAttribute('aria-disabled',String(locked));el.tabIndex=locked?-1:0;el.setAttribute('aria-pressed',String(el.classList.contains('active')));});
   }
-  return {escape,sleep,progress,run,modal,edit,archiveDialog,copy,api,lock};
+  return {escape,sleep,progress,run,modal,edit,archiveDialog,copy,lock};
 })();
 
 </script>
@@ -3596,7 +3489,7 @@ const HOKIntegration = (() => {
     const btn=document.createElement('button');btn.type='button';btn.id='batchDemoBtn';btn.className='btn demo-button';btn.textContent='使用演示数据';$('workbench').querySelector('.tabs').after(btn);btn.onclick=load;
     const status=document.createElement('div');status.id='knotRunStatus';status.role='status';status.hidden=true;$('mainBody').prepend(status);
     const sidebar=$('sidebarBody');sidebar.addEventListener('click',e=>{if(activeConversation()?.demoLoaded&&e.target.closest('.chip')){e.preventDefault();e.stopImmediatePropagation();}},true);
-    HOKDemo.api();updateUserStatus();sync();
+    updateUserStatus();sync();
     window.addEventListener('hashchange',()=>{if(location.hash!=='#workbench')abortController?.abort();});
     window.addEventListener('pagehide',()=>{abortController?.abort();saveActiveConversation();});
     HOKSession.onError(showToast);
@@ -3673,7 +3566,7 @@ const HOKIntegration = (() => {
       const b=document.createElement('button');b.className='btn btn-primary btn-sm';b.textContent='恢复文案';b.onclick=()=>{c.demoCopies.push(copy);c.demoCopies.sort((a,b)=>a.index-b.index);c.demoTrash=c.demoTrash.filter(x=>x.id!==copy.id);c.resultDraft=markdown(c);persistWorkspaceSession();renderRecycleBin();if(activeConversation()?.id===c.id)render();showToast('文案已恢复');};card.append(b);list.append(card);
     }
   }
-  return {init,sync,load,render,trash,generate,openRun:generate,submitRun:generate,archive,selectedEntries,check(){HOKDemo.api();return true;},updateModelHint(){},requireCredentials(){return true;},chat(){showToast('固定案例演示，请直接编辑生成文案');},decorate(){return 0;},recordManual(){},localDate(){return new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'});},receiptFrom(){return [];}};
+  return {init,sync,load,render,trash,generate,openRun:generate,submitRun:generate,archive,selectedEntries,check(){return true;},updateModelHint(){},requireCredentials(){return true;},chat(){showToast('固定案例演示，请直接编辑生成文案');},decorate(){return 0;},recordManual(){},localDate(){return new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'});},receiptFrom(){return [];}};
 })();
 
 </script>
@@ -3828,7 +3721,6 @@ function persistWorkspaceSession() {
       workspaceSequence,
       activeTab: currentMainTab,
       params: cloneParams(),
-      preferences: {user:getApiUser(),model:getApiModel(),stream:getApiStream(),thinking:getApiThinking()},
       workspace: {
         projects: workspaceState.projects,
         conversations: workspaceState.conversations,
@@ -3873,7 +3765,6 @@ function restoreWorkspaceSession() {
       throw new Error('会话数据格式不兼容');
     }
     Object.assign(state, sanitizeParams(saved.params));
-    if(saved.preferences){document.getElementById('apiUser').value=saved.preferences.user||'aidencwang';document.getElementById('apiModel').value=saved.preferences.model||'deepseek-v3.1';document.getElementById('apiStream').checked=saved.preferences.stream!==false;document.getElementById('apiThinking').checked=!!saved.preferences.thinking;updateUserStatus();}
     state.quantityMode = 'custom';
     workspaceState.projects = saved.workspace.projects;
     workspaceState.conversations = saved.workspace.conversations.map(item => normalizeConversation(item));
@@ -4085,11 +3976,6 @@ function requireApiConfiguration() { return HOKIntegration.requireCredentials();
 function checkLocalBackend(showToastResult = true) { return HOKIntegration.check(showToastResult); }
 function updateModelRouteHint() { HOKIntegration.updateModelHint(); }
 
-function getApiToken() { return document.getElementById('apiToken').value.trim(); }
-function getApiUser() { return document.getElementById('apiUser').value.trim(); }
-function getApiModel() { return document.getElementById('apiModel').value; }
-function getApiStream() { return document.getElementById('apiStream').checked; }
-function getApiThinking() { return document.getElementById('apiThinking').checked; }
 
 
 
@@ -4523,7 +4409,7 @@ function initBrandLogo(){
   document.getElementById('brandHomeBtn')?.addEventListener('click',()=>location.hash='home');
 }
 
-function updateUserStatus(){document.getElementById('userStatusName').textContent='ChongWang';document.getElementById('userStatus').classList.toggle('is-configured',!!getApiUser());}
+function updateUserStatus(){document.getElementById('userStatusName').textContent='ChongWang';document.getElementById('userStatus').classList.add('is-configured');}
 
 function findEntity(type, id) {
   if (type === 'project') {
@@ -4997,12 +4883,6 @@ function scrollChatBottom() {
 }
 
 
-function setApiStatus(status, text) {
-  const dot = document.getElementById('apiStatusDot');
-  const txt = document.getElementById('apiStatusText');
-  dot.className = 'api-status ' + status;
-  txt.textContent = text;
-}
 
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -5119,7 +4999,6 @@ function initWideQuantityTooltip() {
 function initUI() {
   initBrandLogo();
   initInfoDialog('generationModeHelpBtn', 'generationModeDialog', 'generationModeDialogClose');
-  initInfoDialog('apiConfigHelpBtn', 'apiConfigDialog', 'apiConfigDialogClose');
   initWideQuantityTooltip();
   createChips('langChips', LANGUAGES.filter(l => !l.more), 'languages', true);
   createChips('moreLangChips', LANGUAGES.filter(l => l.more), 'languages', true);
@@ -5223,7 +5102,6 @@ function initUI() {
   document.getElementById('resetBtn').addEventListener('click', resetAll);
   document.getElementById('stopBtn').addEventListener('click', stopGeneration);
   document.getElementById('chatStopBtn').addEventListener('click', stopGeneration);
-  document.getElementById('checkLocalBackendBtn').addEventListener('click', () => checkLocalBackend(true));
 
   // API Config toggle
   const toggleApiConfig = () => {
@@ -5234,15 +5112,11 @@ function initUI() {
     body.classList.toggle('show');
     const expanded = body.classList.contains('show');
     toggle.setAttribute('aria-expanded', String(expanded));
-    toggle.setAttribute('aria-label', expanded ? '收起 API 配置' : '展开 API 配置');
+    toggle.setAttribute('aria-label', expanded ? '收起 Agent 模型' : '展开 Agent 模型');
   };
   document.getElementById('apiConfigHeader').addEventListener('click', toggleApiConfig);
-  document.getElementById('apiConfigHelpBtn').closest('.tooltip-wrap').addEventListener('click', event => event.stopPropagation());
 
-  document.getElementById('apiUser').value='aidencwang';
-  document.getElementById('apiUser').addEventListener('input',()=>{updateUserStatus();persistWorkspaceSession();});
-  ['apiModel','apiStream','apiThinking'].forEach(id=>document.getElementById(id).addEventListener('change',persistWorkspaceSession));
-  updateUserStatus();setApiStatus('unknown','未验证');
+  updateUserStatus();
 
   // Tabs
   document.querySelectorAll('.tab').forEach(tab => {
@@ -6365,15 +6239,11 @@ HOKSession.ready.then(() => {
     $('feedback').hidden=true;
     root.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
   }
-  function setApiStatus(status, message) {
-    $('apiStatusDot').className='api-status '+status;
-    $('apiStatusText').textContent=message;
-  }
   function setApiExpanded(expanded) {
     $('apiConfigHeader').classList.toggle('open',expanded);
     $('apiConfigBody').classList.toggle('show',expanded);
     $('apiConfigToggle').setAttribute('aria-expanded',String(expanded));
-    $('apiConfigToggle').setAttribute('aria-label',expanded?'收起 API 配置':'展开 API 配置');
+    $('apiConfigToggle').setAttribute('aria-label',expanded?'收起 Agent 模型':'展开 Agent 模型');
   }
   const goalOptions=['下载游戏','玩家回流','活动参与','英雄／皮肤推广','互动增长'];
   const regions={English:['美国','英国','加拿大','澳大利亚','菲律宾','新加坡'],土耳其语:['土耳其'],巴西葡萄牙语:['巴西'],俄语:['俄罗斯','哈萨克斯坦'],阿拉伯语:['沙特阿拉伯','阿联酋','埃及'],繁体中文:['中国台湾','中国香港','中国澳门','新加坡','马来西亚'],简体中文:['新加坡','马来西亚'],印尼语:['印度尼西亚'],马来语:['马来西亚','文莱'],西班牙语:['墨西哥','阿根廷','智利','秘鲁','哥伦比亚','西班牙'],缅甸语:['缅甸'],法语:['法国','加拿大'],德语:['德国','奥地利','瑞士'],日语:['日本']};
@@ -6730,7 +6600,6 @@ HOKSession.ready.then(() => {
     $('archive').onclick=()=>{const entries=selectedVideoCopies();if(entries.length)HOKDemo.archiveDialog(entries,()=>archiveVideo(entries));};
     $('reset').onclick=()=>{demoStop();loadDemo();};
     $('add-copy').hidden=true;
-    HOKDemo.api('vc-');
     root.querySelector('.vc-config').addEventListener('click',e=>{if(ensureDemo().loaded&&e.target.closest('.chip')){e.preventDefault();e.stopImmediatePropagation();}},true);
     window.addEventListener('hashchange',()=>{if(location.hash!=='#video-workbench')demoStop();});
     window.addEventListener('pagehide',demoStop);
@@ -6748,14 +6617,6 @@ HOKSession.ready.then(() => {
   root.querySelectorAll('[data-vc-field]').forEach(el=>el.addEventListener('input',()=>{state.params[el.dataset.vcField]=el.dataset.vcField==='quantity'?(el.value===''?'':Number(el.value)):el.value;clearFeedback();syncChoices();scheduleSave();}));
   root.querySelectorAll('[data-vc-summary]').forEach(el=>el.addEventListener('input',()=>{state.summary[el.dataset.vcSummary]=el.value;analysisChanged();}));
   $('apiConfigHeader').onclick=()=>setApiExpanded(!$('apiConfigBody').classList.contains('show'));
-  const apiHelp=$('apiConfigHelpBtn'),apiDialog=$('apiConfigDialog'),apiHelpWrap=apiHelp.closest('.tooltip-wrap');
-  apiHelpWrap.onclick=event=>event.stopPropagation();
-  apiHelpWrap.onpointerenter=()=>apiHelpWrap.classList.remove('tooltip-suppressed');
-  apiHelp.onblur=()=>apiHelpWrap.classList.remove('tooltip-suppressed');
-  apiHelp.onclick=()=>{if(!apiDialog.open){apiHelp.setAttribute('aria-expanded','true');apiDialog.showModal();$('apiConfigDialogClose').focus();}};
-  $('apiConfigDialogClose').onclick=()=>apiDialog.close();
-  apiDialog.onclick=event=>{if(event.target===apiDialog)apiDialog.close();};
-  apiDialog.onclose=()=>{apiHelpWrap.classList.add('tooltip-suppressed');apiHelp.setAttribute('aria-expanded','false');apiHelp.focus();};
   $('home').onclick=()=>location.hash='home';
   $('reset').onclick=()=>{state.params=structuredClone(defaults);syncFields();clearFeedback();persist();toast('配置已重置，视频、摘要与文案已保留');};
   $('tab-editor').onclick=()=>switchTab('editor');$('tab-prompt').onclick=()=>switchTab('prompt');$('tab-workspace').onclick=()=>switchTab('workspace');$('trash').onclick=()=>switchTab('trash');$('trash-back').onclick=()=>switchTab('workspace');
