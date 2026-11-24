@@ -2801,7 +2801,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
         <button class="tab" data-tab="result">📝 生成结果</button>
       </div>
       <div class="main-header-actions">
-        <div class="user-status" id="userStatus" role="status" aria-live="polite"><strong>User：</strong><span id="userStatusName">未登录</span></div>
+        <div class="user-status" id="userStatus" role="status" aria-live="polite"><strong>User：</strong><span id="userStatusName">ChongWang</span></div>
         <button class="btn btn-sm btn-stop" id="stopBtn" style="display:none;">⏹ 终止运行</button>
       </div>
     </div>
@@ -3189,6 +3189,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
       <div class="vc-tabs" role="tablist" aria-label="视频工作台视图"><button class="vc-tab vc-workspace-tab" id="vc-tab-workspace" role="tab" aria-selected="false" aria-controls="vc-workspace-panel" tabindex="-1" type="button"><svg class="vc-icon"><use href="#i-folder"/></svg>工作区 <span class="workspace-current-label" id="vc-current-project">当前项目：<strong>未归类</strong></span></button><button class="vc-tab" id="vc-tab-editor" role="tab" aria-selected="true" aria-controls="vc-editor" type="button">视频与文案</button><button class="vc-tab" id="vc-tab-prompt" role="tab" aria-selected="false" aria-controls="vc-prompt-panel" tabindex="-1" type="button">Prompt 预览</button></div>
       <button type="button" class="btn demo-button" id="vc-demo">使用演示数据</button><button type="button" class="btn btn-secondary" id="vc-demo-stop" hidden>停止运行</button>
       <button class="btn btn-primary vc-generate" id="vc-generate" type="button"><svg class="vc-icon"><use href="#i-spark"/></svg>生成投放文案</button>
+      <div class="user-status is-configured" role="status"><strong>User：</strong><span>ChongWang</span></div>
     </header>
     <div class="vc-main-scroll">
       <div class="vc-feedback" id="vc-feedback" role="status" hidden></div>
@@ -3391,7 +3392,7 @@ const HOKDemo = (() => {
     for(const suffix of ['apiToken','token','apiUser','apiModel','apiStream','apiThinking']){
       const el=id(suffix);if(!el)continue;el.disabled=true;
       if(suffix==='apiToken'||suffix==='token'){el.value='';el.placeholder='演示模式，无需 Token';el.closest('div')?.querySelector('label span')?.remove();}
-      if(suffix==='apiUser')el.value='Demo User';
+      if(suffix==='apiUser')el.value='ChongWang';
       if(suffix==='apiModel')el.replaceChildren(new Option('本地演示 · 预设案例','demo'));
     }
     id('apiStatusText').textContent='演示模式已就绪';id('apiStatusDot').className='api-status ok';
@@ -4520,7 +4521,7 @@ function initBrandLogo(){
   document.getElementById('brandHomeBtn')?.addEventListener('click',()=>location.hash='home');
 }
 
-function updateUserStatus(){document.getElementById('userStatusName').textContent=getApiUser()||'未填写';document.getElementById('userStatus').classList.toggle('is-configured',!!getApiUser());}
+function updateUserStatus(){document.getElementById('userStatusName').textContent='ChongWang';document.getElementById('userStatus').classList.toggle('is-configured',!!getApiUser());}
 
 function findEntity(type, id) {
   if (type === 'project') {
