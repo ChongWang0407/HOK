@@ -2445,6 +2445,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
 .agent-model-row{padding:12px 13px;border:1.5px solid var(--border);border-radius:12px;background:rgba(255,255,255,.58);box-shadow:2px 3px 0 rgba(36,36,44,.08)}
 .agent-model-role{display:block;margin-bottom:5px;color:var(--text2);font-size:11px;font-weight:800}
 .agent-model-name{display:block;color:var(--text);font-size:15px;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+.agent-demo-badge{display:inline-flex;align-items:center;flex:0 0 auto;padding:5px 8px;border:1px solid #c49c86;border-radius:9px;background:#f4dfcf;color:#654437;font-size:11px;font-weight:800;line-height:1.2}
 .demo-button.btn{background:#cf4b43;color:#fff;border-color:#aa3c37;box-shadow:0 3px 0 #aa3c3740;white-space:nowrap;flex:none;font-weight:800;padding:11px 18px}.demo-button.btn:hover{background:#b83e38}.demo-button.btn:disabled{opacity:.65;cursor:wait}
 .main-header,.vc-header{flex-wrap:wrap;gap:10px}.vc-header{justify-content:flex-start}.main-header .tabs{flex:0 1 auto}.main-header-actions{margin-left:auto}.vc-header .vc-tabs{flex:0 1 auto;min-width:0}.vc-tabs{flex-wrap:wrap}
 .demo-api-label{display:inline-block;font-size:11px;line-height:1.5;color:#6f4639;background:#f4ddcb;border:1px solid #bd9f90;padding:3px 6px;border-radius:7px;margin-left:5px;vertical-align:middle}.api-config h3{flex-wrap:wrap}.api-config input:disabled,.api-config select:disabled{opacity:.75;cursor:default}
@@ -2748,6 +2749,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
         <div class="api-config-header open" id="apiConfigHeader">
           <button class="section-toggle" id="apiConfigToggle" type="button" aria-label="收起 Agent 模型" aria-expanded="true" aria-controls="apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
           <h3>🤖 Agent 调用模型</h3>
+          <span class="agent-demo-badge">演示 demo，无需配置</span>
         </div>
         <div class="api-config-body show" id="apiConfigBody">
           <ul class="agent-model-list" aria-label="Agent 调用模型">
@@ -3093,6 +3095,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
         <div class="api-config-header open" id="vc-apiConfigHeader">
           <button class="section-toggle" id="vc-apiConfigToggle" type="button" aria-label="收起 Agent 模型" aria-expanded="true" aria-controls="vc-apiConfigBody"><span class="triangle" aria-hidden="true"></span></button>
           <h3>🤖 Agent 调用模型</h3>
+          <span class="agent-demo-badge">演示 demo，无需配置</span>
         </div>
         <div class="api-config-body show" id="vc-apiConfigBody">
           <ul class="agent-model-list" aria-label="Agent 调用模型">
