@@ -1468,7 +1468,7 @@ details.proc-fold[open] summary { border-bottom-color: var(--border); }
 .user-status.is-configured { background: var(--card-lilac); }
 .user-status.is-toast-covered { visibility: hidden; }
 .user-status strong { flex: 0 0 auto; font-weight: 800; white-space: nowrap; }
-#userStatusName { min-width: 0; padding: 4px 8px; border: 1px solid rgba(36,36,44,.22); border-radius: 7px; background: #E7C7AC; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+#userStatusName, #vc-userStatusName { min-width: 0; padding: 4px 8px; border: 1px solid rgba(36,36,44,.22); border-radius: 7px; background: #E7C7AC; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
 .entity-heading { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
 .entity-heading > h3, .entity-heading > h4 { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .entity-heading > h4 { flex: 1; }
@@ -2257,7 +2257,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
 .vc-workspace-tab { gap:9px; padding-right:8px; }
 .vc-workspace-tab .workspace-current-label { min-height:25px; max-width:min(260px,30vw); padding:4px 9px; border:0; border-left:1.5px solid rgba(36,36,44,.25); border-radius:7px; background:#ECECF1; color:var(--text2); font-size:11px; font-weight:750; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .vc-workspace-tab[aria-selected=true] .workspace-current-label { background:#D7E1EF; color:var(--text); }
-.vc-generate { margin-left:auto; min-height:40px; font-size:13px; display:flex; align-items:center; gap:7px; }
+.vc-generate { margin-left:0; min-height:40px; font-size:13px; display:flex; align-items:center; gap:7px; }
 .vc-main-scroll { flex:1; min-height:0; overflow:auto; padding:20px; scrollbar-gutter:stable; }
 .vc-feedback { border:1px solid #ae8391; border-radius:12px; background:#f4e6e5; color:#733e50; padding:11px 14px; font-size:12px; margin-bottom:16px; }
 .vc-progress { display:flex; list-style:none; gap:25px; margin-bottom:20px; padding:11px 16px; background:rgba(248,247,245,.91); border:1px solid #9299ad80; border-radius:12px; }
@@ -3188,8 +3188,10 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
     <header class="main-header vc-header">
       <div class="vc-tabs" role="tablist" aria-label="视频工作台视图"><button class="vc-tab vc-workspace-tab" id="vc-tab-workspace" role="tab" aria-selected="false" aria-controls="vc-workspace-panel" tabindex="-1" type="button"><svg class="vc-icon"><use href="#i-folder"/></svg>工作区 <span class="workspace-current-label" id="vc-current-project">当前项目：<strong>未归类</strong></span></button><button class="vc-tab" id="vc-tab-editor" role="tab" aria-selected="true" aria-controls="vc-editor" type="button">视频与文案</button><button class="vc-tab" id="vc-tab-prompt" role="tab" aria-selected="false" aria-controls="vc-prompt-panel" tabindex="-1" type="button">Prompt 预览</button></div>
       <button type="button" class="btn demo-button" id="vc-demo">使用演示数据</button><button type="button" class="btn btn-secondary" id="vc-demo-stop" hidden>停止运行</button>
-      <button class="btn btn-primary vc-generate" id="vc-generate" type="button"><svg class="vc-icon"><use href="#i-spark"/></svg>生成投放文案</button>
-      <div class="user-status is-configured" role="status"><strong>User:</strong><span>ChongWang</span></div>
+      <div class="main-header-actions vc-header-actions">
+        <button class="btn btn-primary vc-generate" id="vc-generate" type="button"><svg class="vc-icon"><use href="#i-spark"/></svg>生成投放文案</button>
+        <div class="user-status is-configured" role="status"><strong>User:</strong><span id="vc-userStatusName">ChongWang</span></div>
+      </div>
     </header>
     <div class="vc-main-scroll">
       <div class="vc-feedback" id="vc-feedback" role="status" hidden></div>
