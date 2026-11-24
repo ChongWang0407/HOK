@@ -1875,9 +1875,9 @@ details.proc-fold[open] summary { border-bottom-color: var(--border); }
 .brief-sub-label:first-child { margin-top: 2px; }
 .brief-hint { font-size: 11px; color: var(--text2); line-height: 1.5; margin-top: 6px; }
 .brief-warn { font-size: 11px; color: var(--red); line-height: 1.5; margin-top: 6px; }
-#stageChips, #toneChips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+#stageChips, #audienceChips, #toneChips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 #forbiddenChips { display: grid; grid-template-columns: 1fr; gap: 6px; }
-#stageChips .chip, #toneChips .chip, #forbiddenChips .chip { width: 100%; min-width: 0; padding: 7px 5px; text-align: center; font-size: 12px; white-space: nowrap; }
+#stageChips .chip, #audienceChips .chip, #toneChips .chip, #forbiddenChips .chip { width: 100%; min-width: 0; padding: 7px 5px; text-align: center; font-size: 12px; white-space: nowrap; }
 #forbiddenChips .chip { text-align: left; padding: 7px 12px; }
 #forbiddenChips .chip::before { content: "✕ "; opacity: .55; }
 .fact-list { display: grid; gap: 6px; }
@@ -2666,12 +2666,28 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
             <button class="motion-hint" type="button" aria-label="查看活动阶段说明" aria-describedby="stageContentTip">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M12 19h.01"></path></svg>
             </button>
-            <span class="tooltip" id="stageContentTip" role="tooltip">单选，再次点击可取消。决定说话时机：预热不能写“已开放”，收尾才写“最后机会”</span>
+            <span class="tooltip" id="stageContentTip" role="tooltip">单选，再次点击可取消。决定什么时候说：预热不能写“已开放”，收尾才写“最后机会”</span>
           </span>
           <button class="section-toggle" type="button" aria-label="展开活动阶段选项" aria-expanded="false" aria-controls="stageContent"><span class="triangle" aria-hidden="true"></span></button>
         </div>
         <div class="section-content" id="stageContent" hidden>
         <div class="chip-group" id="stageChips"></div>
+        </div>
+      </div>
+
+      <div class="section card-stage optional-section">
+        <div class="section-label">
+          目标人群 Audience <span class="badge badge-required">必填</span>
+          <span class="tooltip-wrap">
+            <button class="motion-hint" type="button" aria-label="查看目标人群说明" aria-describedby="audienceContentTip">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v10"></path><path d="M12 19h.01"></path></svg>
+            </button>
+            <span class="tooltip" id="audienceContentTip" role="tooltip">单选，再次点击可取消。决定对谁说：活跃玩家讲新内容，流失玩家给回来的理由，新手玩家降低上手门槛</span>
+          </span>
+          <button class="section-toggle" type="button" aria-label="展开目标人群选项" aria-expanded="false" aria-controls="audienceContent"><span class="triangle" aria-hidden="true"></span></button>
+        </div>
+        <div class="section-content" id="audienceContent" hidden>
+        <div class="chip-group" id="audienceChips"></div>
         </div>
       </div>
 
@@ -3238,7 +3254,8 @@ window.HOK_UI_CONFIG = Object.freeze({
   ],
   themes: ['五排开黑', '新赛季', '英雄集结', '皮肤上新', '限时活动', '赛事战报', '福利活动', '排位冲刺'],
   keywords: ['团队配合', '高光时刻', '逆风翻盘', '峡谷集结', '好友开黑', '排位上分', '赛季冲刺', '战术执行'],
-  stages: ['预热', '上线首日', '活动进行中', '收尾倒计时', '流失召回'],
+  stages: ['预热', '上线首日', '活动进行中', '收尾倒计时'],
+  audiences: ['活跃玩家', '流失玩家', '新手玩家'],
   tones: ['热血竞技', '轻松休闲', '团队情谊', '回归温情', '福利惊喜', '紧迫限时'],
   forbidden: ['免费皮肤 / 白送', '稳赢 / 必胜 / 保证上分', '未确认的时间、价格、概率', '夸大稀有度（绝版 / 限定）', '贬低其他游戏或玩家'],
   factSources: ['官方公告', '运营确认', '活动配置表'],
@@ -3501,11 +3518,11 @@ const HOKIntegration = (() => {
   function load(){
     $('demoDialog')?.close();abortController?.abort();abortController=null;
     saveActiveConversation();workspaceState.activeConversationId=null;resetState();
-    Object.assign(state,{languages:['印尼语','English'],previewMode:'single',quantity:6,shortQuantity:4,longQuantity:2,intro:brief,stages:['流失召回'],tones:['团队情谊','回归温情'],facts:[{text:'游戏名称：HOK（Honor of Kings）'},{text:'玩法卖点：支持与好友组队游玩'},{text:'推广目标：邀请玩家返回游戏，与好友重新组队'}],extraContent:'用老朋友邀请的口吻，突出陪伴，不制造限时焦虑。'});
+    Object.assign(state,{languages:['印尼语','English'],previewMode:'single',quantity:6,shortQuantity:4,longQuantity:2,intro:brief,stages:['活动进行中'],audiences:['流失玩家'],tones:['团队情谊','回归温情'],facts:[{text:'游戏名称：HOK（Honor of Kings）'},{text:'玩法卖点：支持与好友组队游玩'},{text:'推广目标：邀请玩家返回游戏，与好友重新组队'}],extraContent:'用老朋友邀请的口吻，突出陪伴，不制造限时焦虑。'});
     syncUIFromState();updateGenerationModeUI();updatePreview(false);
     const c=createConversation(workspaceState.activeProjectId,{title:'演示 · 好友组队召回',paramsSnapshot:cloneParams(),promptText:getCurrentPromptText(),promptMode:'single'});
     c.demoLoaded=true;c.demoStatus='ready';c.demoCopies=[];c.demoTrash=[];
-    for(const id of ['introContent','stageContent','toneContent','factsContent']){const section=$(id).closest('.section');section.classList.add('is-open');$(id).hidden=false;section.querySelector('.section-toggle').setAttribute('aria-expanded','true');}
+    for(const id of ['introContent','stageContent','audienceContent','toneContent','factsContent']){const section=$(id).closest('.section');section.classList.add('is-open');$(id).hidden=false;section.querySelector('.section-toggle').setAttribute('aria-expanded','true');}
     $('apiConfigHeader').classList.remove('open');$('apiConfigBody').classList.remove('show');$('apiConfigToggle').setAttribute('aria-expanded','false');
     updatePreview();sync();persistWorkspaceSession();showToast('演示配置已填入，点击“运行该 Prompt”开始');
   }
@@ -3597,6 +3614,7 @@ const THEMES = (window.HOK_UI_CONFIG?.themes || HOKPromptConfig.themes).map((val
 const KEYWORDS = (window.HOK_UI_CONFIG?.keywords || HOKPromptConfig.keywords).map((value,i)=>({id:String(i+1),label:value,value}));
 const toChipItems = list => (list || []).map((value,i)=>({id:String(i+1),label:value,value}));
 const STAGES = toChipItems(window.HOK_UI_CONFIG?.stages);
+const AUDIENCES = toChipItems(window.HOK_UI_CONFIG?.audiences);
 const TONES = toChipItems(window.HOK_UI_CONFIG?.tones);
 const FORBIDDEN_PRESETS = window.HOK_UI_CONFIG?.forbidden || [];
 const FORBIDDEN = toChipItems(FORBIDDEN_PRESETS);
@@ -3626,6 +3644,7 @@ const state = {
   useLibraryRef: false,
   extraContent: '',
   stages: [],
+  audiences: [],
   tones: [],
   customTone: '',
   facts: [],
@@ -5006,6 +5025,7 @@ function initUI() {
   createChips('langChips', LANGUAGES.filter(l => !l.more), 'languages', true);
   createChips('moreLangChips', LANGUAGES.filter(l => l.more), 'languages', true);
   createChips('stageChips', STAGES, 'stages', false);
+  createChips('audienceChips', AUDIENCES, 'audiences', false);
   createChips('toneChips', TONES, 'tones', true);
   createChips('forbiddenChips', FORBIDDEN, 'forbidden', true);
   initFactsUI();
@@ -5195,6 +5215,7 @@ function resetState() {
   state.useLibraryRef = false;
   state.extraContent = '';
   state.stages = [];
+  state.audiences = [];
   state.tones = [];
   state.customTone = '';
   state.facts = [];
@@ -5303,8 +5324,13 @@ function syncUIFromState() {
   }
   if (!Array.isArray(state.forbidden)) state.forbidden = [...FORBIDDEN_PRESETS];
   if (!Array.isArray(state.stages)) state.stages = [];
+  if (!Array.isArray(state.audiences)) state.audiences = [];
+  if (state.stages.includes('流失召回')) {
+    state.stages = state.stages.filter(v => v !== '流失召回');
+    if (!state.audiences.length) state.audiences = ['流失玩家'];
+  }
   if (!Array.isArray(state.tones)) state.tones = [];
-  [['stageChips', 'stages'], ['toneChips', 'tones'], ['forbiddenChips', 'forbidden']].forEach(([id, key]) => {
+  [['stageChips', 'stages'], ['audienceChips', 'audiences'], ['toneChips', 'tones'], ['forbiddenChips', 'forbidden']].forEach(([id, key]) => {
     document.querySelectorAll('#' + id + ' .chip').forEach(c => {
       const active = state[key].includes(c.dataset.value);
       c.classList.toggle('active', active);
@@ -5336,6 +5362,7 @@ function buildPromptText(languages,themes,keywords,quantity,welfare,refCopy,mode
  if(!state.languages.length)missing.push('语言');
  if(!state.intro)missing.push('简介');
  if(!state.stages.length)missing.push('活动阶段');
+ if(!(state.audiences||[]).length)missing.push('目标人群');
  if(!tones.length)missing.push('调性');
  if(!facts.length)missing.push('已确认事实');
  if(!briefForbidden().length)missing.push('禁止写的话');
@@ -5350,6 +5377,7 @@ function buildPromptText(languages,themes,keywords,quantity,welfare,refCopy,mode
 - 短文案 1–30 字符，仅允许英文或中文逗号且不以逗号结尾；长文案 31–90 字符；禁止 emoji
 - 活动简介 theme：${state.intro}
 - 活动阶段 stages：${state.stages.join('、')}
+- 目标人群 audience：${(state.audiences||[]).join('、')}
 - 调性 tone：${tones.join('、')}；调性不得覆盖事实
 - 事实白名单 confirmed_facts：
 ${factLines}
@@ -5388,6 +5416,7 @@ function updateParamSummary(languages, themes, keywords, quantity, welfare, refC
   const need = '<span style="color:#e34935;">未填写</span>';
   parts.push(`<strong>简介：</strong>${state.intro ? escapeHtml(state.intro) : need}`);
   parts.push(`<strong>活动阶段：</strong>${state.stages.length ? escapeHtml(state.stages.join('、')) : need}`);
+  parts.push(`<strong>目标人群：</strong>${(state.audiences||[]).length ? escapeHtml(state.audiences.join('、')) : need}`);
   parts.push(`<strong>调性：</strong>${briefTones().length ? escapeHtml(briefTones().join('、')) : need}`);
   const facts = confirmedFacts();
   parts.push(`<strong>已确认事实：</strong>${facts.length ? facts.map(f => escapeHtml(f.id + ' ' + f.text)).join('；') : need}`);
