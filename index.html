@@ -3193,7 +3193,7 @@ body[data-background-kind="image"] #langChips .chip:nth-last-child(-n + 2) { gri
         </section>
       </div>
       <section id="vc-prompt-panel" role="tabpanel" aria-labelledby="vc-tab-prompt" hidden>
-        <div class="vc-prompt-card"><div class="vc-section-head"><h2>投放文案 Prompt</h2><button class="btn btn-secondary btn-sm" id="vc-copy-prompt" type="button"><svg class="vc-icon"><use href="#i-copy"/></svg>复制 Prompt</button></div><p class="vc-help">随配置和视频摘要实时更新</p><pre id="vc-prompt"></pre></div>
+        <div class="vc-prompt-card"><div class="vc-section-head"><h2>投放文案 Prompt</h2><button class="btn btn-primary btn-sm" id="vc-run-prompt" type="button">▶ 运行该 Prompt</button><button class="btn btn-secondary btn-sm" id="vc-copy-prompt" type="button"><svg class="vc-icon"><use href="#i-copy"/></svg>复制 Prompt</button></div><p class="vc-help">随配置和视频摘要实时更新</p><pre id="vc-prompt"></pre></div>
       </section>
     </div>
   </main>
@@ -3586,7 +3586,24 @@ const HOKIntegration = (() => {
       const b=document.createElement('button');b.className='btn btn-primary btn-sm';b.textContent='恢复文案';b.onclick=()=>{c.demoCopies.push(copy);c.demoCopies.sort((a,b)=>a.index-b.index);c.demoTrash=c.demoTrash.filter(x=>x.id!==copy.id);c.resultDraft=markdown(c);persistWorkspaceSession();renderRecycleBin();if(activeConversation()?.id===c.id)render();showToast('文案已恢复');};card.append(b);list.append(card);
     }
   }
-  return {init,sync,load,render,trash,generate,openRun:generate,submitRun:generate,archive,selectedEntries,check(){return true;},updateModelHint(){},requireCredentials(){return true;},chat(){showToast('固定案例演示，请直接编辑生成文案');},decorate(){return 0;},recordManual(){},localDate(){return new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'});},receiptFrom(){return [];}};
+  function openRun(mode){
+    if(abortController)return;
+    if(!activeConversation()?.demoLoaded){showToast('请先点击“使用演示数据”');return;}
+    openRunConversationDialog(mode);
+  }
+  function submitRun(){
+    if(!runConversationDialogState||abortController)return;
+    if(!$('runNewProjectPanel').hidden){$('runConversationError').textContent='请先保存新项目，或取消新建项目。';return;}
+    const previous=activeConversation(),mode=runConversationDialogState.mode;
+    if(!previous?.demoLoaded)return;
+    const options={title:$('runConversationName').value.trim()||defaultConversationTitle(),paramsSnapshot:cloneParams(),promptText:getCurrentPromptText(),promptMode:mode};
+    const projectId=$('runProjectSelect').value||null;
+    closeRunConversationDialog();
+    const c=createConversation(projectId,options);if(!c)return;
+    Object.assign(c,{demoLoaded:true,demoStatus:'ready',demoCopies:[],demoTrash:[]});
+    persistWorkspaceSession();renderWorkspace();sync();generate();
+  }
+  return {init,sync,load,render,trash,generate,openRun,submitRun,archive,selectedEntries,check(){return true;},updateModelHint(){},requireCredentials(){return true;},chat(){showToast('固定案例演示，请直接编辑生成文案');},decorate(){return 0;},recordManual(){},localDate(){return new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'});},receiptFrom(){return [];}};
 })();
 
 </script>
@@ -4799,7 +4816,7 @@ function initEntityManagementUI() {
   document.getElementById('moveConversationDialog').addEventListener('cancel', event => { event.preventDefault(); closeMoveConversationDialog(); });
   document.getElementById('moveConversationForm').addEventListener('submit', event => { event.preventDefault(); submitMoveConversation(); });
   document.getElementById('runConversationCancel').addEventListener('click', closeRunConversationDialog);
-  document.getElementById('runConversationUnassigned').addEventListener('click', () => { document.getElementById('runProjectSelect').value = ''; submitRunConversation(); });
+  document.getElementById('runConversationUnassigned').addEventListener('click', () => { document.getElementById('runProjectSelect').value = ''; document.getElementById('runNewProjectPanel').hidden = true; submitRunConversation(); });
   document.getElementById('runConversationForm').addEventListener('submit', event => { event.preventDefault(); submitRunConversation(); });
   document.getElementById('runConversationDialog').addEventListener('cancel', event => { event.preventDefault(); closeRunConversationDialog(); });
   document.getElementById('runNewProjectToggle').addEventListener('click', () => {
@@ -6517,7 +6534,7 @@ HOKSession.ready.then(() => {
     $('analyze').disabled=busy||!d.loaded||mediaStatus!=='ready';
     $('analyze').textContent=d.analyzed?'重新分析视频':'AI 分析视频';
     $('confirm').disabled=busy||!d.analyzed;$('confirm').textContent=state.copies.length&&d.generatedRevision!==d.revision?'确认修改并重新生成':'确认并生成文案';
-    $('generate').hidden=true;
+    $('generate').hidden=true;$('run-prompt').disabled=busy||!d.loaded||!d.analyzed;
     $('analysis-empty').hidden=d.analyzed;$('analysis-content').hidden=!d.analyzed;$('analysis-edit').hidden=!d.analyzed;
     $('analysis-edit').disabled=busy;$('analysis-edit').textContent=d.editing?'完成编辑':'编辑分析结果';
     $('analysis-content').classList.toggle('is-editing',!!d.editing);
@@ -6625,7 +6642,13 @@ HOKSession.ready.then(() => {
   }
   function initDemo(){
     $('demo').onclick=loadDemo;$('demo-stop').onclick=demoStop;
-    $('analyze').onclick=analyzeDemo;$('confirm').onclick=$('generate').onclick=generateDemo;
+    $('analyze').onclick=analyzeDemo;
+    $('run-prompt').onclick=$('confirm').onclick=$('generate').onclick=()=>{
+      const d=ensureDemo();if(demoController)return;
+      if(!d.loaded){toast('请先点击“使用演示数据”');return;}
+      if(!d.analyzed){toast('请先点击“AI 分析视频”');return;}
+      window.HOKVideoWorkspace?.openRun(generateDemo);
+    };
     $('analysis-edit').onclick=()=>{ensureDemo().editing=!ensureDemo().editing;syncDemo();persist();};
     $('select-all').onclick=()=>{$('result-groups').querySelectorAll('.vc-copy-check:not(:disabled)').forEach(el=>el.checked=true);updateVideoSelection();};
     $('select-none').onclick=()=>{$('result-groups').querySelectorAll('.vc-copy-check').forEach(el=>el.checked=false);updateVideoSelection();};
@@ -6705,11 +6728,11 @@ HOKSession.ready.then(() => {
         if(state.media.kind==='upload'){mediaStatus='missing';state.confirmed=false;video.removeAttribute('poster');syncStatus();}
         else loadSource(exampleSource,false);
       }else play();
-    }else if(!next&&active){active=false;video.pause();dialog.close();$('token').value='';$('toast').hidden=true;persist();}
+    }else if(!next&&active){active=false;video.pause();dialog.close();$('toast').hidden=true;persist();}
   }
   window.addEventListener('hashchange',route);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)video.pause();else play();});
-  window.addEventListener('pagehide',()=>{video.pause();$('token').value='';persist();});
+  window.addEventListener('pagehide',()=>{video.pause();persist();});
   window.addEventListener('pageshow',()=>{route();play();});
   function restoreDraft(snapshot){
     demoStop();demoController=null;
@@ -6873,7 +6896,48 @@ HOKSession.ready.then(() => {
   root.addEventListener('vc:copy-deleted',event=>{data.trash.push({id:uid(),conversationId:data.activeId,copy:event.detail,at:Date.now()});save();});
   window.addEventListener('pagehide',capture);
   window.addEventListener('hashchange',()=>{if(location.hash!=='#video-workbench')$('entity-dialog').close();});
-  window.HOKVideoWorkspace={createDemo(){createConversation(data.selectedProjectId||null);current().title='演示 · SIMA YI 皮肤展示';save();render();}};
+  // Reuse the activity dialog layout with independent video project storage.
+  const runDialog=document.getElementById('runConversationDialog').cloneNode(true);
+  const runIds=new Map();
+  for(const el of [runDialog,...runDialog.querySelectorAll('[id]')]){const oldId=el.id;runIds.set(oldId,'vc-run-'+oldId);el.id=runIds.get(oldId);}
+  for(const el of [runDialog,...runDialog.querySelectorAll('*')]){
+    for(const attr of ['for','aria-labelledby','aria-describedby','aria-controls'])if(el.hasAttribute(attr))el.setAttribute(attr,el.getAttribute(attr).split(' ').map(id=>runIds.get(id)||id).join(' '));
+    if(el.name==='runProjectVisibility')el.name='vcRunProjectVisibility';
+  }
+  root.append(runDialog);
+  const runEl=id=>document.getElementById(runIds.get(id));
+  let pendingRun=null,runReturnFocus=null;
+  function populateRunProjects(selected=data.selectedProjectId||''){
+    const select=runEl('runProjectSelect');select.replaceChildren(new Option('未归类对话（不选择项目）',''),...liveProjects().map(p=>new Option(p.name,p.id)));select.value=projectById(selected)?selected:'';
+  }
+  function closeRun(){runDialog.close();pendingRun=null;runReturnFocus?.focus();}
+  function openRun(callback){
+    if(runDialog.open)return;pendingRun=callback;runReturnFocus=document.activeElement;
+    populateRunProjects();runEl('runConversationName').value='';runEl('runConversationError').textContent='';runEl('runNewProjectPanel').hidden=true;
+    runEl('runDefaultNamePreview').textContent='默认名称：'+(current()?.title||'视频文案 '+new Date().toLocaleString('zh-CN'));
+    runDialog.showModal();runEl('runProjectSelect').focus();
+  }
+  function submitRun(skip=false){
+    if(!pendingRun)return;
+    if(!skip&&!runEl('runNewProjectPanel').hidden){runEl('runConversationError').textContent='请先保存新项目，或取消新建项目。';return;}
+    const callback=pendingRun,draft=editor.snapshot(),projectId=skip?null:runEl('runProjectSelect').value||null;
+    const title=runEl('runConversationName').value.trim()||current()?.title||'视频文案 '+new Date().toLocaleString('zh-CN');
+    capture();draft.copies=[];
+    const c={id:uid(),title,projectId,updatedAt:Date.now(),draft};data.conversations.push(c);data.activeId=c.id;data.selectedProjectId=projectId;viewProject=projectId;
+    suppress=true;editor.restoreDraft(draft);suppress=false;save();render();closeRun();editor.switchTab('editor');callback();
+  }
+  runEl('runConversationForm').onsubmit=e=>{e.preventDefault();submitRun();};
+  runEl('runConversationCancel').onclick=closeRun;runEl('runConversationUnassigned').onclick=()=>submitRun(true);
+  runDialog.addEventListener('cancel',e=>{e.preventDefault();closeRun();});
+  runEl('runNewProjectToggle').onclick=()=>{const panel=runEl('runNewProjectPanel');panel.hidden=!panel.hidden;if(!panel.hidden)runEl('runProjectNameInput').focus();};
+  runEl('runCancelProjectBtn').onclick=()=>{runEl('runNewProjectPanel').hidden=true;runEl('runConversationError').textContent='';};
+  runEl('runSaveProjectBtn').onclick=()=>{
+    const name=runEl('runProjectNameInput').value.trim();if(!name){runEl('runConversationError').textContent='请填写项目名称。';runEl('runProjectNameInput').focus();return;}
+    const p={id:uid(),name,period:runEl('runProjectPeriodInput').value.trim(),description:runEl('runProjectDescriptionInput').value.trim(),visibility:runDialog.querySelector('[name="vcRunProjectVisibility"]:checked').value,updatedAt:Date.now()};
+    data.projects.push(p);save();populateRunProjects(p.id);runEl('runNewProjectPanel').hidden=true;runEl('runConversationError').textContent='';render();
+  };
+  window.addEventListener('hashchange',()=>{if(location.hash!=='#video-workbench'&&runDialog.open)closeRun();});
+  window.HOKVideoWorkspace={openRun,createDemo(){createConversation(data.selectedProjectId||null);current().title='演示 · SIMA YI 皮肤展示';save();render();}};
   const c=current();
   if(c){suppress=true;editor.restoreDraft(c.draft);suppress=false;c.draft=editor.snapshot();}
   else{const id=uid();data.conversations.push({id,title:'未命名对话',projectId:null,updatedAt:Date.now(),draft:editor.snapshot()});data.activeId=id;}
